@@ -33,7 +33,10 @@ export const studentApi = api.injectEndpoints({
         method: 'POST',
         body: { status }
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: Tag.STUDENTS, id }]
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: Tag.STUDENTS, id },
+        { type: Tag.STUDENTS }
+      ]
     }),
     addStudent: builder.mutation<AddStudent, StudentProps>({
       query: (payload) => ({
@@ -41,15 +44,18 @@ export const studentApi = api.injectEndpoints({
         method: 'POST',
         body: payload
       }),
-      invalidatesTags: [Tag.STUDENTS]
+      invalidatesTags: [{ type: Tag.STUDENTS }]
     }),
     updateStudent: builder.mutation<{ message: string }, StudentPropsWithId>({
       query: ({ id, ...payload }) => ({
         url: `/students/${id}`,
         method: 'PUT',
-        body: payload
+        body: { userId: id, ...payload }
       }),
-      invalidatesTags: (_result, _error, { id }) => [{ type: Tag.STUDENTS, id }]
+      invalidatesTags: (_result, _error, { id }) => [
+        { type: Tag.STUDENTS, id },
+        { type: Tag.STUDENTS }
+      ]
     }),
     getTeachers: builder.query<GetTeachers, void>({
       query: () => `/teachers`
